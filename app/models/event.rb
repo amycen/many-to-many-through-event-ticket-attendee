@@ -1,4 +1,45 @@
+require 'pry'
 class Event
+    attr_accessor :name, :total_cost, :ticket_price, :venue
+
+    @@all = []
+    
+    def self.all
+        @@all
+    end
+
+    def initialize(name, total_cost, ticket_price)
+        @name = name
+        @total_cost = total_cost
+        @ticket_price = ticket_price
+        @@all << self
+    end
+
+    def sell_to_break_even
+        tickets.count * ticket_price >= total_cost ? 0 : total_cost / ticket_price - tickets.count
+    end
+
+    def tickets
+        Ticket.all.select do |tix| 
+            tix.event == self
+        end 
+    end
+
+    def attendees
+        tickets.map do |tix| 
+            tix.attendee 
+           # binding.pry
+        end
+    end
+
+    def average_age
+        total = attendees.inject(0) do |sum, attendee| 
+            sum + attendee.age
+#            binding.pry
+        end
+        total / attendees.size
+ #       binding.pry
+    end
 end
 
 # Event.all
